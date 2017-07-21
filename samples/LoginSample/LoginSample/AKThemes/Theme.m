@@ -20,7 +20,7 @@
 
 #import "ReverbTheme.h"
 
-const NSUInteger ThemeTypeCount = 11;
+const NSUInteger ThemeTypeCount = 9;
 
 @interface Theme ()
 
@@ -36,8 +36,6 @@ const NSUInteger ThemeTypeCount = 11;
 {
   switch (themeType) {
     case ThemeTypeDefault:
-    case ThemeTypeContemporary:
-    case ThemeTypeTranslucent:
     case ThemeTypeSalmon:
     case ThemeTypeYellow:
     case ThemeTypeRed:
@@ -48,39 +46,6 @@ const NSUInteger ThemeTypeCount = 11;
     case ThemeTypeReverbB:
     case ThemeTypeReverbC:
       return YES;
-  }
-}
-
-+ (BOOL)isSkinTheme:(ThemeType)themeType
-{
-  switch (themeType) {
-    case ThemeTypeDefault:
-    case ThemeTypeContemporary:
-    case ThemeTypeTranslucent:
-      return YES;
-    case ThemeTypeSalmon:
-    case ThemeTypeYellow:
-    case ThemeTypeRed:
-    case ThemeTypeDog:
-    case ThemeTypeBicycle:
-    case ThemeTypeReverbA:
-    case ThemeTypeReverbB:
-    case ThemeTypeReverbC:
-      return NO;
-  }
-}
-
-+ (AKFSkinType)skinTypeForThemeType:(ThemeType)themeType
-{
-  switch (themeType) {
-    case ThemeTypeDefault:
-      return AKFSkinTypeClassic;
-    case ThemeTypeTranslucent:
-      return AKFSkinTypeTranslucent;
-    case ThemeTypeContemporary:
-      return AKFSkinTypeContemporary;
-    default:
-      return AKFSkinTypeClassic;
   }
 }
 
@@ -88,11 +53,7 @@ const NSUInteger ThemeTypeCount = 11;
 {
   switch (themeType) {
     case ThemeTypeDefault:
-      return @"Skin-Classic (Default)";
-    case ThemeTypeContemporary:
-      return @"Skin-Contemporary";
-    case ThemeTypeTranslucent:
-      return @"Skin-Translucent";
+      return @"Default";
     case ThemeTypeSalmon:
       return @"Salmon";
     case ThemeTypeYellow:
@@ -104,11 +65,11 @@ const NSUInteger ThemeTypeCount = 11;
     case ThemeTypeBicycle:
       return @"Bicycle";
     case ThemeTypeReverbA:
-      return @"Advanced-Reverb A";
+      return @"Reverb A";
     case ThemeTypeReverbB:
-      return @"Advanced-Reverb B";
+      return @"Reverb B";
     case ThemeTypeReverbC:
-      return @"Advanced-Reverb C";
+      return @"Reverb C";
   }
 }
 
@@ -117,13 +78,7 @@ const NSUInteger ThemeTypeCount = 11;
   Theme *theme;
   switch (themeType) {
     case ThemeTypeDefault:
-      theme = nil;
-      break;
-    case ThemeTypeContemporary:
-      theme = nil;
-      break;
-    case ThemeTypeTranslucent:
-      theme = nil;
+      theme = [self defaultTheme];
       break;
     case ThemeTypeSalmon:
       theme = [self _salmonTheme];

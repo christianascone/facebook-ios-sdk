@@ -35,11 +35,14 @@
 - (void)testProperties
 {
   FBSDKShareLinkContent *content = [FBSDKShareModelTestUtility linkContent];
+  XCTAssertEqualObjects(content.contentDescription, [FBSDKShareModelTestUtility linkContentDescription]);
   XCTAssertEqualObjects(content.contentURL, [FBSDKShareModelTestUtility contentURL]);
   XCTAssertEqualObjects(content.hashtag, [FBSDKShareModelTestUtility hashtag]);
+  XCTAssertEqualObjects(content.imageURL, [FBSDKShareModelTestUtility linkImageURL]);
   XCTAssertEqualObjects(content.peopleIDs, [FBSDKShareModelTestUtility peopleIDs]);
   XCTAssertEqualObjects(content.placeID, [FBSDKShareModelTestUtility placeID]);
   XCTAssertEqualObjects(content.ref, [FBSDKShareModelTestUtility ref]);
+  XCTAssertEqualObjects(content.contentTitle, [FBSDKShareModelTestUtility linkContentTitle]);
   XCTAssertEqualObjects(content.quote, [FBSDKShareModelTestUtility quote]);
 }
 

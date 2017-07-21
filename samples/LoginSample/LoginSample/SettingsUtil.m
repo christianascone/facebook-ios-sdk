@@ -103,29 +103,38 @@ static NSArray *fbPermissions;
   return [FBTweakValue(@"Settings", @"AccountKit", @"Response Type", @(AKFResponseTypeAccessToken), [SettingsUtil responseTypes]) integerValue];
 }
 
-+ (void)setUIManagerForController:(id<AKFViewController>)controller
++ (Theme *)currentTheme
 {
   ThemeType themeType = [FBTweakValue(@"Settings", @"AccountKit", @"Theme", @(ThemeTypeDefault), [SettingsUtil themeTweakValues]) integerValue];
+  Theme *theme = nil;
+  if ([Theme isReverbTheme:themeType]) {
+    theme = [ReverbTheme themeWithType:themeType];
+  } else {
+    theme = [Theme themeWithType:themeType];
+  }
+  return theme;
+}
+
++ (void)setAdvancedUIManagerForController:(id<AKFViewController>)controller
+{
+  Theme *theme = [self currentTheme];
   BOOL useAdvancedUIManager = FBTweakValue(@"Settings", @"AccountKit", @"Advanced Theme", NO);
-  if ([Theme isSkinTheme:themeType]) {
-    controller.uiManager = [[AKFSkinManager alloc] initWithSkinType:themeType];
-  } else if ([Theme isReverbTheme:themeType] || useAdvancedUIManager) {
+  if (useAdvancedUIManager || [Theme isReverbTheme:theme.themeType]) {
     AKFButtonType entryButtonType = [FBTweakValue(@"Settings", @"AccountKit", @"Entry Button", @(AKFButtonTypeDefault), [SettingsUtil entryButtonTweakValues]) integerValue];
     AKFButtonType confirmButtonType = [FBTweakValue(@"Settings", @"AccountKit", @"Confirm Button", @(AKFButtonTypeDefault), [SettingsUtil entryButtonTweakValues]) integerValue];
     AKFTextPosition textPosition = [FBTweakValue(@"Settings", @"AccountKit", @"Text Position", @(AKFButtonTypeDefault), [SettingsUtil textPositionTweakValues]) integerValue];
-    if ([Theme isReverbTheme:themeType]) {
+    if ([Theme isReverbTheme:theme.themeType]) {
       controller.uiManager = [[ReverbUIManager alloc] initWithConfirmButtonType:confirmButtonType
                                                                 entryButtonType:entryButtonType
                                                                       loginType:controller.loginType
                                                                    textPosition:textPosition
-                                                                          theme:[ReverbTheme themeWithType:themeType]
+                                                                          theme:(ReverbTheme *)theme
                                                                        delegate:nil];
     } else {
       controller.uiManager = [[AdvancedUIManager alloc] initWithConfirmButtonType:confirmButtonType
                                                                   entryButtonType:entryButtonType
                                                                         loginType:controller.loginType
-                                                                     textPosition:textPosition
-                                                                            theme:[Theme themeWithType:themeType]];
+                                                                     textPosition:textPosition];
     }
   }
 }

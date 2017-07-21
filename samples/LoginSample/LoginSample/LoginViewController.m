@@ -170,7 +170,8 @@
 - (void)prepareAKLoginViewController:(UIViewController<AKFViewController> *)loginViewController
 {
   loginViewController.delegate = self;
-  [SettingsUtil setUIManagerForController:loginViewController];
+  loginViewController.theme = [SettingsUtil currentTheme];
+  [SettingsUtil setAdvancedUIManagerForController:loginViewController];
 }
 
 #pragma mark - FBLoginButtonDelegate

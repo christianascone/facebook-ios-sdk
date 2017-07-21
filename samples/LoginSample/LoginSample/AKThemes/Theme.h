@@ -23,8 +23,6 @@
 typedef NS_ENUM(NSUInteger, ThemeType)
 {
   ThemeTypeDefault,
-  ThemeTypeContemporary,
-  ThemeTypeTranslucent,
   ThemeTypeSalmon,
   ThemeTypeYellow,
   ThemeTypeRed,
@@ -40,8 +38,6 @@ extern const NSUInteger ThemeTypeCount;
 @interface Theme : AKFTheme
 
 + (BOOL)isReverbTheme:(ThemeType)themeType;
-+ (BOOL)isSkinTheme:(ThemeType)themeType;
-+ (AKFSkinType)skinTypeForThemeType:(ThemeType)themeType;
 + (NSString *)labelForThemeType:(ThemeType)themeType;
 + (instancetype)themeWithType:(ThemeType)themeType;
 

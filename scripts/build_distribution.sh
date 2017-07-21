@@ -19,20 +19,6 @@
 
 . "${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh"
 
-COMMON_ARCHS="arm64 armv7 i386 x86_64"
-
-check_binary_has_architectures() {
-	local BINARY=$1
-	local VALID_ARCHS=$2
-	local SORTED_ARCHS
-  SORTED_ARCHS=$(lipo -info "$BINARY" | cut -d: -f3 | xargs -n1 | sort | xargs)
-
-	if [ "$SORTED_ARCHS" != "$VALID_ARCHS" ] ; then
-		echo "ERROR: Invalid Architectures for $1. Expected $VALID_ARCHS   Received: $SORTED_ARCHS";
-    exit 1
-	fi
-}
-
 # option s to skip build
 SKIPBUILD=""
 while getopts "s" OPTNAME
@@ -89,13 +75,11 @@ echo Building Distribution.
   || die "Could not copy FBSDKLoginKit.framework"
 \cp -R "$FB_SDK_BUILD"/FBSDKShareKit.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FBSDKShareKit.framework"
-\cp -R "$FB_SDK_BUILD"/FBSDKPlacesKit.framework "$FB_SDK_BUILD_PACKAGE" \
-|| die "Could not copy FBSDKPlacesKit.framework"
 \cp -R "$FB_SDK_BUILD"/Bolts.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy Bolts.framework"
 \cp -R $"$FB_SDK_ROOT"/FacebookSDKStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FacebookSDKStrings.bundle"
-for SAMPLE in Configurations Iconicus RPSSample Scrumptious ShareIt SwitchUserSample FBSDKPlacesSample; do
+for SAMPLE in Configurations Iconicus RPSSample Scrumptious ShareIt SwitchUserSample; do
   \rsync -avmc --exclude "${SAMPLE}.xcworkspace" "$FB_SDK_SAMPLES/$SAMPLE" "$FB_SDK_BUILD_PACKAGE_SAMPLES" \
     || die "Could not copy $SAMPLE"
 done
@@ -122,7 +106,6 @@ done
 if [ -z $SKIPBUILD ]; then
   (xcodebuild -project "${FB_SDK_ROOT}"/AccountKit/AccountKit.xcodeproj -scheme "AccountKit-Universal" -configuration Release clean build) || die "Failed to build account kit"
 fi
-check_binary_has_architectures "$FB_SDK_BUILD"/AccountKit.framework/AccountKit "$COMMON_ARCHS";
 \cp -R "$FB_SDK_BUILD"/AccountKit.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy AccountKit.framework"
 \cp -R "$FB_SDK_BUILD"/AccountKitStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
@@ -144,13 +127,10 @@ check_binary_has_architectures "$FB_SDK_BUILD"/AccountKit.framework/AccountKit "
 
 if [ -z $SKIPBUILD ]; then
   (xcodebuild -workspace "${FB_SDK_ROOT}"/ads/src/FBAudienceNetwork.xcworkspace -scheme "BuildAll-Universal" -configuration Release clean build) || die "Failed to build FBAudienceNetwork"
-  (xcodebuild -workspace "${FB_SDK_ROOT}"/ads/src/FBAudienceNetwork.xcworkspace -scheme "FBAudienceNetworkDynamicFramework-Universal" -configuration Release clean build) || die "Failed to build FBAudienceNetworkDynamicFramework"
 fi
 FBAN_SAMPLES=$FB_SDK_BUILD_PACKAGE/Samples/FBAudienceNetwork
 \rsync -avmc "$FB_SDK_ROOT"/ads/build/FBAudienceNetwork.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FBAudienceNetwork.framework"
-\rsync -avmc "$FB_SDK_ROOT"/ads/build/FBAudienceNetworkDynamicFramework.framework "$FB_SDK_BUILD_PACKAGE" \
-  || die "Could not copy FBAudienceNetworkDynamicFramework.framework"
 \mkdir -p "$FB_SDK_BUILD_PACKAGE/Samples/FBAudienceNetwork"
 \rsync -avmc "$FB_SDK_ROOT"/ads/samples/ "$FBAN_SAMPLES" \
   || die "Could not copy FBAudienceNetwork samples"

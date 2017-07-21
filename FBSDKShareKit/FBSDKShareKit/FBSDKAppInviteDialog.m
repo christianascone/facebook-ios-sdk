@@ -130,9 +130,7 @@
 
   FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
   BOOL useSafariViewController = [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameAppInvite];
-  BOOL canShowNative = [self _canShowNative];
-  canShowNative = YES; // Force native mode
-  if (canShowNative) {
+  if ([self _canShowNative]) {
     FBSDKBridgeAPIRequest *nativeRequest = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
                                                                                             scheme:FBSDK_CANOPENURL_FACEBOOK
                                                                                         methodName:FBSDK_APP_INVITE_METHOD_NAME

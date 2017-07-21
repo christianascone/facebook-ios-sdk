@@ -24,7 +24,7 @@
 
 @protocol ReverbUIManagerDelegate;
 
-@interface ReverbUIManager : NSObject <AKFUIManager>
+@interface ReverbUIManager : NSObject <AKFAdvancedUIManager>
 
 - (instancetype)initWithConfirmButtonType:(AKFButtonType)confirmButtonType
                           entryButtonType:(AKFButtonType)entryButtonType
